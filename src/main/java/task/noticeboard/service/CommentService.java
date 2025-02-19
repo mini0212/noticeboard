@@ -1,5 +1,6 @@
 package task.noticeboard.service;
 
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 import task.noticeboard.entity.Comment;
 import task.noticeboard.entity.Post;
@@ -9,6 +10,7 @@ import task.noticeboard.repository.PostRepository;
 import java.time.LocalDateTime;
 
 @Service
+@Transactional
 public class CommentService {
 	private final PostRepository postRepository;
 	private final CommentRepository commentRepository;
