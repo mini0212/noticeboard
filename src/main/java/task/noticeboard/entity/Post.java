@@ -23,11 +23,15 @@ public class Post {
 	@Column(nullable = false, columnDefinition = "TEXT")
 	private String content;
 
+	@Column(nullable = false)
+	@Builder.Default
 	private Boolean isDeleted = false;
 
 	@Column(nullable = false)
+	@Builder.Default
 	private LocalDateTime createdAt = LocalDateTime.now();
 
 	@Column(nullable = false)
+	@Builder.Default
 	private LocalDateTime updatedAt = LocalDateTime.now();
 }
