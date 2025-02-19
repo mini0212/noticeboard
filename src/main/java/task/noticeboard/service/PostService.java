@@ -28,14 +28,12 @@ public class PostService {
 		return postRepository.save(post);
 	}
 
-	public Post updatePost(Long postId, String title, String content) {
-		//TODO: 존재하지 않는 경우 예외처리
-		Post post = postRepository.findById(postId).orElseThrow();
+	public Post updatePost(Long postId, Post post) {
 		if (post.getIsDeleted()) {
 			// TODO: 삭제된 게시글에 대한 예외처리
 		}
-		post.setTitle(title);
-		post.setContent(content);
+		post.setTitle(post.getTitle());
+		post.setContent(post.getContent());
 		post.setUpdatedAt(LocalDateTime.now());
 		return postRepository.save(post);
 	}
