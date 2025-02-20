@@ -21,10 +21,10 @@ public class CommentService {
 	}
 
 	public Comment creatComment(Long postId, String content) {
-		//TODO: 존재하지 않는 경우 예외처리
-		Post post = postRepository.findById(postId).orElseThrow();
+		Post post = postRepository.findById(postId)
+						.orElseThrow(() -> new RuntimeException("게시글이 존재하지 않습니다."));
 		if (post.getIsDeleted()) {
-			// TODO: 삭제된 게시글에 대한 예외처리
+			throw new RuntimeException("삭제된 게시글에는 댓글을 작성할 수 없습니다.");
 		}
 		Comment comment = Comment.builder()
 						.post(post)
@@ -34,10 +34,10 @@ public class CommentService {
 	}
 
 	public Comment updateComment(Long commentId, String content) {
-		//TODO: 존재하지 않는 경우 예외처리
-		Comment comment = commentRepository.findById(commentId).orElseThrow();
+		Comment comment = commentRepository.findById(commentId)
+						.orElseThrow(() -> new RuntimeException("댓글이 존재하지 않습니다."));
 		if (comment.getIsDeleted()) {
-			// TODO: 삭제된 댓글에 대한 예외처리
+			throw new RuntimeException("삭제된 댓글은 수정할 수 없습니다.");
 		}
 		comment.setContent(content);
 		comment.setUpdatedAt(LocalDateTime.now());
@@ -45,10 +45,10 @@ public class CommentService {
 	}
 
 	public void deleteComment(Long commentId) {
-		//TODO: 존재하지 않는 경우 예외처리
-		Comment comment = commentRepository.findById(commentId).orElseThrow();
+		Comment comment = commentRepository.findById(commentId)
+						.orElseThrow(() -> new RuntimeException("댓글이 존재하지 않습니다."));
 		if (comment.getIsDeleted()) {
-			// TODO: 삭제된 댓글에 대한 예외처리
+			throw new RuntimeException("이미 삭제된 댓글입니다.");
 		}
 		comment.setIsDeleted(true);
 		comment.setUpdatedAt(LocalDateTime.now());

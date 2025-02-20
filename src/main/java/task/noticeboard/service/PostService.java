@@ -32,7 +32,7 @@ public class PostService {
 
 	public Post updatePost(Long postId, Post post) {
 		if (post.getIsDeleted()) {
-			// TODO: 삭제된 게시글에 대한 예외처리
+			throw new RuntimeException("이미 삭제된 게시글입니다.");
 		}
 		post.setTitle(post.getTitle());
 		post.setContent(post.getContent());
@@ -41,10 +41,10 @@ public class PostService {
 	}
 
 	public void deletePost(Long postId) {
-		//TODO: 존재하지 않는 경우 예외처리
-		Post post = postRepository.findById(postId).orElseThrow();
+		Post post = postRepository.findById(postId)
+						.orElseThrow(() -> new RuntimeException("게시글이 존재하지 않습니다."));
 		if (post.getIsDeleted()) {
-			// TODO: 삭제된 게시글에 대한 예외처리
+			throw new RuntimeException("이미 삭제된 게시글입니다.");
 		}
 		post.setIsDeleted(true);
 		post.setUpdatedAt(LocalDateTime.now());
@@ -57,10 +57,10 @@ public class PostService {
 	}
 
 	public Post getPost(Long postId) {
-		//TODO: 존재하지 않는 경우 예외처리
-		Post post = postRepository.findById(postId).orElseThrow();
+		Post post = postRepository.findById(postId)
+						.orElseThrow(() -> new RuntimeException("게시글이 존재하지 않습니다."));
 		if (post.getIsDeleted()) {
-			// TODO: 삭제된 게시글에 대한 예외처리
+			throw new RuntimeException("이미 삭제된 게시글입니다.");
 		}
 		return post;
 	}
