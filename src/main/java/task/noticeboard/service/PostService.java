@@ -1,6 +1,7 @@
 package task.noticeboard.service;
 
 import jakarta.transaction.Transactional;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import task.noticeboard.entity.Post;
 import task.noticeboard.repository.CommentRepository;
@@ -11,6 +12,7 @@ import java.util.List;
 
 @Service
 @Transactional
+@Slf4j
 public class PostService {
 	private final PostRepository postRepository;
 	private final CommentRepository commentRepository;
@@ -20,12 +22,12 @@ public class PostService {
 		this.commentRepository = commentRepository;
 	}
 
-	public Post createPost(String title, String content) {
-		Post post = Post.builder()
-						.title(title)
-						.content(content)
+	public Post createPost(Post post) {
+		Post createdPost = Post.builder()
+						.title(post.getTitle())
+						.content(post.getContent())
 						.build();
-		return postRepository.save(post);
+		return postRepository.save(createdPost);
 	}
 
 	public Post updatePost(Long postId, Post post) {

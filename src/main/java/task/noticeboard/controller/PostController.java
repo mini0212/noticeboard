@@ -1,5 +1,6 @@
 package task.noticeboard.controller;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -10,6 +11,7 @@ import java.util.List;
 
 @Controller
 @RequestMapping("/posts")
+@Slf4j
 public class PostController {
 	private final PostService postService;
 
@@ -24,27 +26,41 @@ public class PostController {
 		return "/posts";
 	}
 
+	@GetMapping("/add")
+	public String addPost() {
+		return "/addPost";
+	}
+
 	@GetMapping("/{postId}")
 	public String getPost(@PathVariable Long postId, Model model) {
 		Post post = postService.getPost(postId);
-		model.addAttribute("model", model);
+		model.addAttribute("post", post);
 		return "/post";
 	}
 
 	@PostMapping
-	public String createPost(@RequestBody Post request) {
-		postService.createPost(request.getTitle(), request.getContent());
-		return "redirect:/posts/{postId}";
+	public String createPost(@ModelAttribute Post post) {
+		postService.createPost(post);
+		return "redirect:/posts";
+	}
+
+	@GetMapping("/{postId}/edit")
+	public String updatePost(@PathVariable Long postId, Model model) {
+		Post post = postService.getPost(postId);
+		model.addAttribute("post", post);
+		return "/editPost";
 	}
 
 	@PostMapping("/{postId}/edit")
-	public String updatePost(@PathVariable Long postId, @ModelAttribute Post post) {
+	public String update(@PathVariable Long postId, @ModelAttribute Post post) {
+		post.setId(postId);
 		postService.updatePost(postId, post);
 		return "redirect:/posts/{postId}";
 	}
 
-	@DeleteMapping("/{postId}")
+	@PostMapping("/{postId}")
 	public String deletePost(@PathVariable Long postId) {
+		log.info("삭제 요청" + postId);
 		postService.deletePost(postId);
 		return "redirect:/posts";
 	}
