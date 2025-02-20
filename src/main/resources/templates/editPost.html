@@ -1,0 +1,30 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <link th:href="@{/css/bootstrap.min.css}"
+          href="../css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .container {
+            max-width: 560px;
+}
+    </style>
+</head>
+<body>
+<div class="container py-5">
+    <form th:action="@{/posts/{postId}/edit(postId=${post.id})}" method="post">
+        <input type="text" id="title" name="title" class="form-control" th:value="${post.title}" readonly>
+        <hr class="my-3 border-gray" style="height: 1px;">
+        <textarea type="text" id="content" name="content" class="form-control" row=5
+                  th:text="${post.content}"></textarea>
+
+        <div class="col pt-4">
+            <button class="btn btn-primary float-end"
+                    type="submit">
+                수정
+            </button>
+        </div>
+    </form>
+</div>
+</body>
+</html>

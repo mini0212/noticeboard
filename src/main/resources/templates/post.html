@@ -1,0 +1,37 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<html>
+<head>
+    <meta charset="utf-8">
+    <link th:href="@{/css/bootstrap.min.css}"
+          href="../css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .container {
+            max-width: 560px;
+}
+    </style>
+</head>
+<body>
+<div class="container py-5">
+    <h2 class="" th:text="${post.title}"></h2>
+    <hr class="my-3 border-gray" style="height: 1px;">
+    <label class="" th:text="${post.content}"></label>
+    <div class="row pt-4">
+        <div class="col d-flex gap-2 justify-content-end">
+            <button class="btn btn-primary"
+                    onclick="location.href='editPost.html'"
+                    th:onclick="|location.href='@{/posts/{postId}/edit(postId=${post.id})}'|"
+                    type="button">
+                수정
+            </button>
+            <form th:action="@{/posts/{postId}(postId=${post.id})}" method="post">
+                <input type="hidden" name="_method" value="delete">
+                <button class="btn btn-danger" type="submit">삭제</button>
+            </form>
+
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
