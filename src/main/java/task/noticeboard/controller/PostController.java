@@ -4,7 +4,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import task.noticeboard.entity.Comment;
 import task.noticeboard.entity.Post;
+import task.noticeboard.service.CommentService;
 import task.noticeboard.service.PostService;
 
 import java.util.List;
@@ -14,9 +16,11 @@ import java.util.List;
 @Slf4j
 public class PostController {
 	private final PostService postService;
+	private final CommentService commentService;
 
-	public PostController(PostService postService) {
+	public PostController(PostService postService, CommentService commentService) {
 		this.postService = postService;
+		this.commentService = commentService;
 	}
 
 	@GetMapping
@@ -34,7 +38,9 @@ public class PostController {
 	@GetMapping("/{postId}")
 	public String getPost(@PathVariable Long postId, Model model) {
 		Post post = postService.getPost(postId);
+		List<Comment> comments = commentService.getCommentByPostId(postId);
 		model.addAttribute("post", post);
+		model.addAttribute("comments", comments);
 		return "/post";
 	}
 
