@@ -1,6 +1,9 @@
 package task.noticeboard.controller;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -24,8 +27,11 @@ public class PostController {
 	}
 
 	@GetMapping
-	public String getPostList(Model model) {
-		List<Post> posts = postService.getPostList();
+	public String getPostList(@RequestParam(defaultValue = "0") int page,
+	                          @RequestParam(defaultValue = "10") int size,
+	                          Model model) {
+		Pageable pageable = PageRequest.of(page, size);
+		Page<Post> posts = postService.getPostList(pageable);
 		model.addAttribute("posts", posts);
 		return "/posts";
 	}

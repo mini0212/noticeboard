@@ -1,5 +1,6 @@
 package task.noticeboard.service;
 
+import jakarta.annotation.PostConstruct;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 import task.noticeboard.entity.Comment;
@@ -8,6 +9,7 @@ import task.noticeboard.repository.CommentRepository;
 import task.noticeboard.repository.PostRepository;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 @Transactional
@@ -41,7 +43,7 @@ public class CommentService {
 		}
 		comment.setContent(content);
 		comment.setUpdatedAt(LocalDateTime.now());
-		return comment;
+		return commentRepository.save(comment);
 	}
 
 	public void deleteComment(Long commentId) {
@@ -53,5 +55,9 @@ public class CommentService {
 		comment.setIsDeleted(true);
 		comment.setUpdatedAt(LocalDateTime.now());
 		commentRepository.save(comment);
+	}
+
+	public List<Comment> getCommentByPostId(Long postId) {
+		return commentRepository.findByPostIdAndIsDeletedFalse(postId);
 	}
 }

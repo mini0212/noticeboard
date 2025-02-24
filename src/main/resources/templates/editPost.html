@@ -13,7 +13,7 @@
 <body>
 <div class="container py-5">
     <form th:action="@{/posts/{postId}/edit(postId=${post.id})}" method="post">
-        <input type="text" id="title" name="title" class="form-control" th:value="${post.title}" readonly>
+        <input type="text" id="title" name="title" class="form-control" th:value="${post.title}">
         <hr class="my-3 border-gray" style="height: 1px;">
         <textarea type="text" id="content" name="content" class="form-control" row=5
                   th:text="${post.content}"></textarea>

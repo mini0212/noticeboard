@@ -2,7 +2,10 @@ package task.noticeboard.service;
 
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import task.noticeboard.entity.Comment;
 import task.noticeboard.entity.Post;
 import task.noticeboard.repository.CommentRepository;
 import task.noticeboard.repository.PostRepository;
@@ -48,12 +51,17 @@ public class PostService {
 		}
 		post.setIsDeleted(true);
 		post.setUpdatedAt(LocalDateTime.now());
-		// TODO: 댓글 삭제
+		// 댓글 삭제
+		List<Comment> comments = commentRepository.findByPostIdAndIsDeletedFalse(postId);
+		for (Comment comment : comments) {
+			comment.setIsDeleted(true);
+			commentRepository.save(comment);
+		}
 		postRepository.save(post);
 	}
 
-	public List<Post> getPostList() {
-		return postRepository.findAll();
+	public Page<Post> getPostList(Pageable pageable) {
+		return postRepository.findByIsDeletedFalse(pageable);
 	}
 
 	public Post getPost(Long postId) {

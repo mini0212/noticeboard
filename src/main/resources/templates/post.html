@@ -16,10 +16,10 @@
     <h2 class="" th:text="${post.title}"></h2>
     <hr class="my-3 border-gray" style="height: 1px;">
     <label class="" th:text="${post.content}"></label>
-    <div class="row pt-4">
+    <div class="row pt-4"
+         th:unless="${post.isDeleted}">
         <div class="col d-flex gap-2 justify-content-end">
             <button class="btn btn-primary"
-                    onclick="location.href='editPost.html'"
                     th:onclick="|location.href='@{/posts/{postId}/edit(postId=${post.id})}'|"
                     type="button">
                 수정
@@ -28,10 +28,78 @@
                 <input type="hidden" name="_method" value="delete">
                 <button class="btn btn-danger" type="submit">삭제</button>
             </form>
-
         </div>
     </div>
+    <div>
+        <h4>댓글</h4>
+        <hr class="my-3 border-gray" style="height: 1px;">
+        <table class="table">
+            <tbody>
+            <th:block th:each="comment : ${comments}">
+                <tr class="d-flex w-100">
+                    <td class="flex-glow-1">
+                        <label th:id="'commentContent-' + ${comment.id}" th:text="${comment.content}"></label>
+                    </td>
+                    <td class="text-end">
+                        <button class="btn btn-sm btn-outline-secondary"
+                                th:onclick="|toggleEdit(${comment.id})|">
+                            수정
+                        </button>
+                    </td>
+                    <td class="text-end">
+                        <form th:action="@{/posts/{postId}/comments/{commentId}/delete(postId=${post.id}, commentId=${comment.id})}"
+                              method="post">
+                            <input type="hidden" name="_method" value="delete">
+                            <button class="btn btn-sm btn-outline-danger" type="submit">삭제</button>
+                        </form>
+
+                    </td>
+                </tr>
+
+                <!--/* 댓글 수정 영역 */-->
+                <tr th:id="'editRow-' + ${comment.id}" style="display:none;">
+                    <td colspan="3">
+                        <form th:action="@{/posts/{postId}/comments/{commentId}/edit(postId=${post.id}, commentId=${comment.id})}"
+                              method="post">
+                            <div class="d-flex align-items-start gap-2">
+                            <textarea name="content" class="form-control" rows="3"
+                                      th:text="${comment.content}"></textarea>
+                                <button type="submit" class="btn btn-primary" style="width: 70px;">수정</button>
+                            </div>
+                        </form>
+                    </td>
+                </tr>
+            </th:block>
+            </tbody>
+        </table>
+        <!--/* 댓글 입력 영역 */-->
+        <form th:action="@{/posts/{postId}/comments(postId=${post.id})}" method="post">
+            <div>
+                    <textarea type="text" id="content" name="content" class="form-control" rows="3"
+                              placeholder="댓글을 입력하세요" .></textarea>
+            </div>
+            <div class="col">
+                <button type="submit" class="btn btn-primary mt-2 float-end">등록</button>
+            </div>
+        </form>
+    </div>
 </div>
+<script th:inline="javascript">
+    function toggleEdit(commentId) {
+        let editRow = document.getElementById("editRow-" + commentId);
+
+        if (!editRow) {
+            console.error("오류: 해당 ID를 가진 요소를 찾을 수 없음 -> editRow-" + commentId);
+            return;
+        }
+
+        if (editRow.style.display === "none") {
+            editRow.style.display = "table-row";
+        } else {
+            editRow.style.display = "none";
+        }
+    }
+</script>
 
 </body>
 </html>
