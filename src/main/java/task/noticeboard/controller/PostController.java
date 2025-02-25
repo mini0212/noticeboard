@@ -28,11 +28,14 @@ public class PostController {
 
 	@GetMapping
 	public String getPostList(@RequestParam(defaultValue = "0") int page,
-	                          @RequestParam(defaultValue = "10") int size,
+	                          @RequestParam(defaultValue = "5") int size,
 	                          Model model) {
 		Pageable pageable = PageRequest.of(page, size);
 		Page<Post> posts = postService.getPostList(pageable);
 		model.addAttribute("posts", posts);
+		model.addAttribute("currentPage", posts.getNumber());
+		model.addAttribute("totalPages", posts.getTotalPages());
+		model.addAttribute("size", size);
 		return "/posts";
 	}
 
